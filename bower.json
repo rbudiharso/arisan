@@ -1,0 +1,11 @@
+{
+  "name": "draw",
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "modernizr": "~2.6.2"
+  },
+  "devDependencies": {
+    "chai": "~3.0.0",
+    "mocha": "~2.2.5"
+  }
+}
