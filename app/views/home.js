@@ -1,7 +1,7 @@
 'use strict';
 
 var Backbone = require('backbone');
-var insignia = require('insignia');
+var EntriesView = require('./entries');
 
 function drawing(collection, callback, finishCallback) {
   var timeout = 0;
@@ -23,17 +23,19 @@ function drawing(collection, callback, finishCallback) {
 }
 
 var HomeView = Backbone.View.extend({
+  initialize: function(options) {
+    this.entriesView = new EntriesView({collection: options.collection});
+  },
   render: function() {
     var template = require('../templates/home.hbs');
     this.$el.html(template());
-    this.insignia = insignia(this.$('#entries')[0], {
-      delimiter: ',',
-      deletion: true,
-    });
+    this.$('.entries').append(this.entriesView.render().html);
     return this;
   },
   events: {
-    'click .draw': 'draw'
+    'click .draw': 'draw',
+    'keyup #entries': 'addEntry',
+    'click .remove': 'removeEntry'
   },
   draw: function() {
     var entries = this.insignia.tags();
@@ -47,6 +49,19 @@ var HomeView = Backbone.View.extend({
       $result.before('<h3>FINAL RESULT</h3>');
       $result.html(selected.get('name').toUppercase());
     });
+  },
+  addEntry: function(evt) {
+    if (evt.keyCode === 13) {
+      var input = evt.target;
+      this.entriesView.collection.add({name: input.value.trim()});
+      this.entriesView.render();
+      input.value = '';
+      input.focus();
+      console.log(this.collection.models);
+    }
+    return false;
+  },
+  removeEntry: function(evt) {
   }
 });
 
