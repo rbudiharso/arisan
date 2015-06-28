@@ -4,18 +4,8 @@ var Backbone = require('backbone');
 var AppView = require('./views/app');
 var Entries = require('./collections/entries');
 
-var entries = new Entries([
-  {name: 'rahmat'},
-  {name: 'ari'},
-  {name: 'bima'},
-  {name: 'widi'},
-  {name: 'deri'},
-  {name: 'windi'},
-  {name: 'pak tim'},
-]);
-
 var Router = Backbone.Router.extend({
-  initialize: function() {
+  initialize() {
     this.appView = (function() {
       return new AppView().render();
     })();
@@ -23,17 +13,28 @@ var Router = Backbone.Router.extend({
 
   routes: {
     '': 'home',
-    '/': 'home'
+    'about': 'about'
   },
 
-  home: function() {
+  home() {
     var el = this.appView.$('#center');
-    var HomeView = require('./views/home');
-    var homeView = new HomeView({
+    var View = require('./views/home');
+    new View({
       el: el,
-      collection: entries
-    });
-    homeView.render();
+      collection: new Entries([
+        {name: 'Foo'},
+        {name: 'Bar'},
+        {name: 'Baz'},
+      ])
+    }).render();
+  },
+
+  about() {
+    var el = this.appView.$('#center');
+    var View = require('./views/about');
+    new View({
+      el: el,
+    }).render();
   }
 });
 
