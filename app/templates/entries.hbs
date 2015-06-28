@@ -1,3 +1,8 @@
-{{#each entries}}
-<li>{{this.attributes.name}} <span class="remove" data-entry-id="{{this.cid}}">&times;</span></li>
-{{/each}}
+<ul class="entries-wrapper">
+  {{#each entries}}
+  <li class="btn btn-primary btn-lg entry">
+    <span>{{this.attributes.name}}</span>
+    <span class="close remove" data-entry-name="{{this.attributes.name}}">&times;</span>
+  </li>
+  {{/each}}
+</ul>

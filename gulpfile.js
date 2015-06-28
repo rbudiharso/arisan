@@ -98,8 +98,8 @@ gulp.task('styles', function()
 gulp.task('scripts', function()
 {
     var browserify = require('browserify');
-    var reactify = require('reactify');
     var hbsfy = require('hbsfy');
+    var babelify = require('babelify');
     var through = require('through2');
 
     return gulp.src(['./app/**/*.'+SCRIPTS_PATTERN])
@@ -107,7 +107,7 @@ gulp.task('scripts', function()
         .pipe($.jshint.reporter('jshint-stylish'))
         .pipe(through.obj(function(file, enc, next)
         {
-            browserify({ entries: [file.path], debug: true, transform: [reactify, hbsfy] })
+            browserify({ entries: [file.path], debug: true, transform: [babelify, hbsfy] })
                 .bundle(function(err, res)
                 {
                     if (err) console.log(err.toString());

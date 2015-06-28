@@ -6,7 +6,7 @@ var Entry = require('../models/entry');
 
 var Entries = Backbone.Collection.extend({
   model: Entry,
-  draw: function() {
+  draw() {
     return _.sample(this.models);
   }
 });

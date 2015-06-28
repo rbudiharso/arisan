@@ -4,7 +4,7 @@ var Backbone = require('backbone');
 
 var AppView = Backbone.View.extend({
   el: '#main',
-  render: function() {
+  render() {
     this.$el.html(require('../templates/app.hbs')());
     return this;
   }

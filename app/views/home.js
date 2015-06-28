@@ -23,13 +23,13 @@ function drawing(collection, callback, finishCallback) {
 }
 
 var HomeView = Backbone.View.extend({
-  initialize: function(options) {
+  initialize(options) {
     this.entriesView = new EntriesView({collection: options.collection});
   },
-  render: function() {
+  render() {
     var template = require('../templates/home.hbs');
     this.$el.html(template());
-    this.$('.entries').append(this.entriesView.render().html);
+    this.drawEntries();
     return this;
   },
   events: {
@@ -37,31 +37,36 @@ var HomeView = Backbone.View.extend({
     'keyup #entries': 'addEntry',
     'click .remove': 'removeEntry'
   },
-  draw: function() {
-    var entries = this.insignia.tags();
-    this.collection.reset(entries.map(function(entry) {
-      return {name: entry};
-    }));
-    var $result = this.$('.jumbotron h1');
-    drawing(this.collection, function(err, selected) {
-      $result.html(selected.get('name'));
-    }, function(err, selected) {
-      $result.before('<h3>FINAL RESULT</h3>');
-      $result.html(selected.get('name').toUppercase());
+  draw() {
+    var $result = this.$('.jumbotron');
+    drawing(this.entriesView.collection, (err, selected) => {
+      var selectedName = selected.get('name');
+      var html = `<h1>${selectedName}</h1>`;
+      $result.html(html);
+    }, (err, selected) => {
+      var selectedName = selected.get('name');
+      var html = `<h3>FINAL RESULT</h3><h1>${selectedName}</h1>`;
+      $result.html(html);
     });
   },
-  addEntry: function(evt) {
+  addEntry(evt) {
     if (evt.keyCode === 13) {
       var input = evt.target;
       this.entriesView.collection.add({name: input.value.trim()});
-      this.entriesView.render();
+      this.drawEntries();
       input.value = '';
       input.focus();
-      console.log(this.collection.models);
     }
     return false;
   },
-  removeEntry: function(evt) {
+  removeEntry(evt) {
+    var name = evt.target.dataset.entryName;
+    var model = this.entriesView.collection.findWhere({name: name});
+    this.entriesView.collection.remove(model);
+    this.drawEntries();
+  },
+  drawEntries() {
+    this.$('.entries').html(this.entriesView.render().$el.html());
   }
 });
 
